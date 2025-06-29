@@ -1,18 +1,19 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import { useClerk, useUser } from "@clerk/clerk-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const { openSignIn } = useClerk();
   const { user } = useUser();
+  const navigate = useNavigate();
 
   return (
     <div className="shadow-md py-4 bg-white">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
         
         <div className="flex items-center gap-3">
-          <img src={assets.logo} alt="logo" className="h-10" />
+          <img onClick = {()=>navigate('/')} src={assets.logo} alt="logo" className="h-10" />
         </div>
 
         {/* Right side */}
@@ -22,7 +23,7 @@ function Navbar() {
               Applied Jobs
             </Link>
             <div className="hidden sm:flex items-center gap-2 text-gray-800 font-medium">
-              <span>Hi, {user.firstName + " " + user.lastName}</span>
+              <span className="max-sm:hidden">Hi, {user.firstName + " " + user.lastName}</span>
               <img
                 src={assets.profile_img}
                 alt="profile"

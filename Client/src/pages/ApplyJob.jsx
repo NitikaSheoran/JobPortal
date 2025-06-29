@@ -1,10 +1,116 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import Loading from "../components/Loading";
+import Navbar from "../components/Navbar";
+import { assets } from "../assets/assets";
+import kconvert from "k-converter";
+import moment from 'moment';
+import JobCart from "../components/jobCart";
+import Footer from "../components/Footer";
 
-function ApplyJob(){
-    return(
-        <>
-        <h2>ApplyJob</h2>
-        </>
-    )
+function ApplyJob() {
+  const { id } = useParams();
+  const [jobData, setJobData] = useState(null);
+  const { jobs } = useContext(AppContext);
+
+  const fetchJob = async () => {
+    const data = jobs.filter((job) => job._id === id);
+    if (data.length !== 0) {
+      setJobData(data[0]);
+    }
+  };
+
+  useEffect(() => {
+    if (jobs.length > 0) {
+      fetchJob();
+    }
+  }, [id, jobs]);
+
+  return jobData ? (
+    <>
+      <Navbar />
+      <div className="min-h-screen py-10 px-4 2xl:px-20 bg-gray-50">
+        <div className="bg-white text-gray-800 rounded-2xl shadow-md p-8 max-w-7xl mx-auto space-y-10">
+          {/* Top Section */}
+          <div className="flex flex-col md:flex-row md:justify-between items-center gap-8">
+            <div className="flex items-center gap-6">
+              <img
+                className="h-24 w-24 object-contain bg-white rounded-lg p-3 border"
+                src={jobData.companyId.image}
+                alt="Company Logo"
+              />
+              <div>
+                <h1 className="text-2xl font-semibold mb-2">{jobData.title}</h1>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                  <span className="flex items-center gap-1">
+                    <img src={assets.suitcase_icon} alt="" className="h-4 w-4" />
+                    {jobData.companyId.name}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <img src={assets.location_icon} className="h-4 w-4" />
+                    {jobData.location}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <img src={assets.person_icon} className="h-4 w-4" />
+                    {jobData.level}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <img src={assets.money_icon} className="h-4 w-4" />
+                    CTC: {kconvert.convertTo(jobData.salary)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="text-center md:text-right">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
+                Apply Now
+              </button>
+              <p className="text-sm text-gray-500 mt-2">
+                Posted {moment(jobData.date).fromNow()}
+              </p>
+            </div>
+          </div>
+
+          {/* Job Description */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-semibold mb-4">Job Description</h2>
+              <div className="space-y-4 text-gray-700 leading-7 text-[15px] [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>h1]:text-2xl [&>h2]:text-xl [&>h3]:text-lg [&>strong]:font-semibold [&>a]:text-blue-600 [&>a]:underline"
+               dangerouslySetInnerHTML={{ __html: jobData.description }}>
+              </div>
+
+              <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
+                Apply Now
+              </button>
+            </div>
+
+            {/* More Jobs from Company */}
+            <div>
+              <h2 className="text-lg font-semibold mb-4 text-gray-800">
+                More jobs from {jobData.companyId.name}
+              </h2>
+              <div className="space-y-4">
+                {jobs
+                  .filter(
+                    (job) =>
+                      job._id !== jobData._id &&
+                      job.companyId._id === jobData.companyId._id
+                  )
+                  .slice(0, 3)
+                  .map((job, index) => (
+                    <JobCart key={index} job={job} />
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  ) : (
+    <Loading />
+  );
 }
+
 export default ApplyJob;
