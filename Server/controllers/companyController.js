@@ -105,7 +105,7 @@ export const getCompanyData = async (req, res) => {
 
 // post new job
 export const postJob = async(req, res) =>{
-    const {title, description, location, salary, level} = req.body
+    const {title, description, location, salary, level, category} = req.body
 
     const companyId = req.company._id
     console.log(companyId, {title, location, description, salary});
@@ -114,6 +114,7 @@ export const postJob = async(req, res) =>{
             title: title,
             description: description,
             location: location,
+            category,
             salary,
             date: Date.now(),
             companyId,
@@ -168,7 +169,7 @@ export const changeJobVisiblity = async(req, res)=>{
         const companyId = req.company._id;
         const job = await Job.findById(id);
         if(job.companyId.toString() === companyId.toString()){
-            job.visibility = !job.visibility
+            job.visible = !job.visible
         }
         await job.save();
         res.json({
