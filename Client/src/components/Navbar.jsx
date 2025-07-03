@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
-import { useClerk, useUser } from "@clerk/clerk-react";
+import { useClerk, useUser, UserButton } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 function Navbar() {
   const { openSignIn } = useClerk();
+
   const { user } = useUser();
   const navigate = useNavigate();
   const {setShowRecruiterLogin} = useContext(AppContext)
@@ -27,11 +28,7 @@ function Navbar() {
             </Link>
             <div className="hidden sm:flex items-center gap-2 text-gray-800 font-medium">
               <span className="max-sm:hidden">Hi, {user.firstName + " " + user.lastName}</span>
-              <img
-                src={assets.profile_img}
-                alt="profile"
-                className="w-10 h-10 rounded-full object-cover border border-gray-300"
-              />
+              <UserButton afterSignOutUrl="/" />
             </div>
           </div>
         ) : (

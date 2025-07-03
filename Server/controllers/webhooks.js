@@ -26,6 +26,7 @@ export const clerkWebhooks = async (req, res) => {
                     resume: ''
                 }
                 await User.create(userData)
+                console.log("user created: ", userData);
                 res.json({})
                 break;
             }
@@ -42,6 +43,7 @@ export const clerkWebhooks = async (req, res) => {
             }
             case 'user.deleted': {
                 await User.findByIdAndDelete(data.id)
+                console.log("user deleted")
             }
             default :
             break;
