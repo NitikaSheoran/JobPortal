@@ -1,6 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import axios from 'axios'
+import {toast} from 'react-toastify'
+
 
 function RecruiterLogin() {
   const [state, setState] = useState("Login");
@@ -8,14 +12,54 @@ function RecruiterLogin() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(false);
+  const navigate = useNavigate();
+  
   const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false);
 
-  const {setShowRecruiterLogin} = useContext(AppContext)
+  const {setShowRecruiterLogin, backendUrl, setCompanyToken, setCompanyData} = useContext(AppContext)
   const onSubmit = async (e) =>{
     e.preventDefault()
 
     if(state === "Sign Up" && !isTextDataSubmitted){
-        setIsTextDataSubmitted(true)
+        return setIsTextDataSubmitted(true)
+    }
+
+    try {
+      if(state === 'Login'){
+        const {data} = await axios.post(backendUrl + '/api/company/login', {email, password})
+        if(data.success === true){
+          console.log(data);
+          setCompanyData(data.company)
+          setCompanyToken(data.token)
+          localStorage.setItem('companyToken', data.token)
+          localStorage.setItem("companyData", JSON.stringify(data.company));
+
+          setShowRecruiterLogin(false)
+          navigate('/dashboard')
+        }else{
+          // react toastify to show error
+          toast.error(data.message)
+        }
+      }else{
+        const formData = new FormData()
+        formData.append('name', name)
+        formData.append('password', password)
+        formData.append('email', email)
+        formData.append('image', image)
+        const {data} = await axios.post(backendUrl + '/api/company/register', formData)
+        if(data.success === true){
+          setCompanyData(data.company)
+          setCompanyToken(data.token)
+          localStorage.setItem('companyToken', data.token)
+          localStorage.setItem("companyData", JSON.stringify(data.company));
+          setShowRecruiterLogin(false)
+          navigate('/dashboard')
+        }else{
+          toast.error(data.message)
+        }
+      }
+    } catch (error) {
+      toast.error(data.message)
     }
   }
 

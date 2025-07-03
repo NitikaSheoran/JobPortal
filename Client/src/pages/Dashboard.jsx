@@ -1,9 +1,14 @@
 import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const {companyData} = useContext(AppContext)
+  console.log("Company Data in Dashboard:", companyData);
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -15,11 +20,12 @@ function Dashboard() {
           alt="Logo"
           className="h-10 cursor-pointer"
         />
+        {companyData && (
         <div className="flex items-center gap-4">
-          <p className="text-gray-600 text-sm">Welcome</p>
+          <p className="text-gray-600 text-sm">Welcome, {companyData.name}</p>
           <div className="relative">
             <img
-                src={assets.company_icon}
+                src={companyData.image}
                 alt="Company Icon"
                 className="h-10 w-10 rounded-full border cursor-pointer"
             />
@@ -33,6 +39,7 @@ function Dashboard() {
           </div>
 
         </div>
+        )}
       </div>
 
       {/* Main Content */}

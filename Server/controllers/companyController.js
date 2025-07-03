@@ -92,7 +92,7 @@ export const getCompanyData = async (req, res) => {
     const companyData = await Company.findById(req.company._id).select("-password");
     res.json({
       success: true,
-      companyData
+      company: companyData
     });
   } catch (error) {
         res.json({
@@ -106,6 +106,12 @@ export const getCompanyData = async (req, res) => {
 // post new job
 export const postJob = async(req, res) =>{
     const {title, description, location, salary, level, category} = req.body
+    if (!title || !description || !location || !salary || !level || !category) {
+        return res.json({
+            success: false,
+            message: "Please fill in all required fields."
+        });
+    }
 
     const companyId = req.company._id
     console.log(companyId, {title, location, description, salary});
@@ -123,7 +129,8 @@ export const postJob = async(req, res) =>{
         await newJob.save();
         res.json({
             success: true,
-            newJob
+            message: "Job posted successfully!",
+            job: newJob
         })
     }catch(error){
         res.json({
