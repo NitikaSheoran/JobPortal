@@ -29,6 +29,7 @@ const jobSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    
     visible: {
         type: Boolean,
         default: true

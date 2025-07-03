@@ -1,4 +1,3 @@
-import { messageInRaw } from "svix";
 import Company from "../models/Company.js"
 import bcrypt, { hash } from 'bcrypt'
 import {v2 as cloudinary} from 'cloudinary'
@@ -6,7 +5,6 @@ import generateToken from "../utils/generateTokens.js";
 import Job from "../models/Job.js";
 
 // Register company
-
 export const registerCompany = async(req, res)=>{
     const {name, email, password} = req.body
     const imageFile = req.file;
@@ -50,7 +48,6 @@ export const registerCompany = async(req, res)=>{
 
 
 // company login
-
 export const loginCompany = async(req, res) =>{
     const {email, password} = req.body;
 
@@ -83,13 +80,30 @@ export const loginCompany = async(req, res) =>{
 
 
 // get company data
+export const getCompanyData = async (req, res) => {
+  if (!req.company) {
+    return res.json({
+      success: false,
+      message: "Not authorized"
+    });
+  }
 
-export const getCompanyData = async(req, res)=>{
+  try {
+    const companyData = await Company.findById(req.company._id).select("-password");
+    res.json({
+      success: true,
+      companyData
+    });
+  } catch (error) {
+        res.json({
+        success: false,
+        message: error.message
+        });
+  }
+};
 
-}
 
 // post new job
-
 export const postJob = async(req, res) =>{
     const {title, description, location, salary, level} = req.body
 
@@ -119,24 +133,53 @@ export const postJob = async(req, res) =>{
 }
 
 // company jon applicants
-
 export const getCompanyJobApplicants = async(req, res) =>{
-
+    const id = req.company._id;
+    // const jobApplicants = 
 }
 
 // company jobs
-
 export const getCompanyPostedJobs = async(req, res) => {
-
+    try{
+        const companyId = req.company._id;
+        const jobs = await Job.find({companyId})
+        // add number of applicants
+        res.json({
+            success:true,
+            jobsData: jobs
+        })
+    }catch(error){
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
 }
 
 // change job application status
-
 export const changeJobApplicationsStatus = async(req, res) =>{
 
 }
 
 // change visibility
 export const changeJobVisiblity = async(req, res)=>{
+    try{
+        const {id} = req.body;
+        const companyId = req.company._id;
+        const job = await Job.findById(id);
+        if(job.companyId.toString() === companyId.toString()){
+            job.visibility = !job.visibility
+        }
+        await job.save();
+        res.json({
+            success: true,
+            job
+        })
 
+    }catch(error){
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
 }
