@@ -6,9 +6,15 @@ import { AppContext } from "../context/AppContext";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const {companyData} = useContext(AppContext)
-  console.log("Company Data in Dashboard:", companyData);
-
+  const {companyData, setCompanyData, setCompanyToken} = useContext(AppContext)
+  // console.log("Company Data in Dashboard:", companyData);
+  const logout = async () => {
+    setCompanyToken(null)
+    localStorage.removeItem('companyToken')
+    setCompanyData(null)
+    localStorage.removeItem('companyData')
+    navigate('/');
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -32,7 +38,7 @@ function Dashboard() {
             
             {/* Dropdown */}
             <ul className="absolute right-0 top-full mt-2 min-w-[8rem] bg-white border rounded-lg shadow-lg z-50">
-                <li className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer text-sm rounded-t-lg">
+                <li onClick = {()=>logout()} className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer text-sm rounded-t-lg">
                 Logout
                 </li>
             </ul>

@@ -40,7 +40,7 @@ app.post('/webhooks', clerkWebhooks)
 
 app.use('/api/company',companyRoutes)
 app.use('/api/job', jobRoutes)
-app.use('./api/user', userRoutes)
+app.use('/api/user', userRoutes)
 
 
 

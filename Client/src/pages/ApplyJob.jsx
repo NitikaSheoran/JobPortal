@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import Loading from "../components/Loading";
 import Navbar from "../components/Navbar";
@@ -8,24 +8,54 @@ import kconvert from "k-converter";
 import moment from 'moment';
 import JobCart from "../components/jobCart";
 import Footer from "../components/Footer";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function ApplyJob() {
+  
+
+  const navigate = useNavigate()
   const { id } = useParams();
   const [jobData, setJobData] = useState(null);
-  const { jobs } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications } = useContext(AppContext);
 
+  useEffect(() => {
+    console.log("UserData in ApplyJob:", userData);
+  }, [userData]);
+  
   const fetchJob = async () => {
-    const data = jobs.filter((job) => job._id === id);
-    if (data.length !== 0) {
-      setJobData(data[0]);
+    try {
+      const {data} = await axios.get(backendUrl + `/api/job/${id}`)
+      if(data.success){
+        setJobData(data.job)
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
     }
   };
 
-  useEffect(() => {
-    if (jobs.length > 0) {
-      fetchJob();
+
+  const applyHandler = async () => {
+    try {
+      console.log(userData)
+      if(!userData){
+        return toast.error("Login to apply for jobs")
+      }
+
+      if(!userData.resume){
+        navigate('/applications')
+        return toast.error("Upload resume to apply")
+      }
+    } catch (error) {
+      
     }
-  }, [id, jobs]);
+  }
+
+  useEffect(() => {
+      fetchJob();
+  }, [id]);
 
   return jobData ? (
     <>
@@ -63,7 +93,7 @@ function ApplyJob() {
               </div>
             </div>
             <div className="text-center md:text-right">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
+              <button onClick={()=>applyHandler()} className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
                 Apply Now
               </button>
               <p className="text-sm text-gray-500 mt-2">
@@ -80,7 +110,7 @@ function ApplyJob() {
                dangerouslySetInnerHTML={{ __html: jobData.description }}>
               </div>
 
-              <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
+              <button onClick={()=>applyHandler()} className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow-md transition">
                 Apply Now
               </button>
             </div>

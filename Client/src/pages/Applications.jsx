@@ -2,12 +2,41 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { assets, jobsApplied } from "../assets/assets";
 import moment from 'moment'
+import { useCallback } from "react";
+import { useContext } from "react";
+import App from "../App";
+import { AppContext } from "../context/AppContext";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 function Applications(){
 
     const [isEdit, setisEdit] = useState(false);
     const [resume, setResume] = useState(null);
+    const {backendUrl, userData, userApplications, fetchUserData} = useContext(AppContext)
+    const {user} = useUser();
+    const {getToken} = useAuth();
 
+    const updateResume = async () => {
+        try {
+            const formData = new FormData()
+            formData.append('resumeFile', resume)
+            const token = await getToken();
+            const {data} = await axios.post(backendUrl+'/api/user/update-resume', formData, {headers: {Authorization: `Bearer ${token}`}})
+            if(data.success){
+                toast.success(data.message)
+                await fetchUserData();
+            }else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
 
+        setisEdit(false)
+        setResume(null)
+    }
+    
     return(
         <>
         <Navbar />
@@ -15,14 +44,14 @@ function Applications(){
             <h2 className="text-xl font-semibold">Your Resume</h2>
             <div className="mb-6 mt-3">
                 {
-                    isEdit ? 
+                    isEdit || userData && userData.resume==='' ? 
                     <>
                     <label className="flex items-center" htmlFor="resumeUpload">
-                        <p className="bg-blue text-blue-600 px-4 py-2 rounded-lg mr-2">Select Resume</p>
+                        <p className="bg-blue text-blue-600 px-4 py-2 rounded-lg mr-2">{resume? resume.name : "Select Resume"}</p>
                         <input className="border border-blue-200 rounded-2xl mr-2 py-2 px-4" type="file" onChange = {e=>setResume(e.target.files[0])} accept="application/pdf" />
                         <img src={assets.profile_upload_icon} alt="" />
                     </label>
-                    <button onClick={()=>setisEdit(false)} className="bg-green-100 border border-green-400 rounded-lg px-4 py-2">Save</button>
+                    <button onClick={updateResume} className="bg-green-100 border border-green-400 rounded-lg px-4 py-2">Save</button>
                     </> : 
                     <div className="flex gap-2">
                         <a className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg" href="" >Resume</a>

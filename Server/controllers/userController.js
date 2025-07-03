@@ -93,12 +93,11 @@ export const getUserJobApplications = async(req, res) => {
 export const updateUserResume = async(req, res) => {
     try{
         const userId = req.auth.userId;
-        const resumeFile = req.resumeFile;
+        const resumeFile = req.file;
         const userData = await User.findById(userId)
         if(resumeFile){
-            const resumeUpload = await connectCloudinary.uploader.upload(resumeFile.path)
+            const resumeUpload = await cloudinary.uploader.upload(resumeFile.path)
             userData.resume = resumeUpload.secure_url;
-            
         }
         await userData.save();
         return res.json({

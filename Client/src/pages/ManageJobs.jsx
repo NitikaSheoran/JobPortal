@@ -13,7 +13,7 @@ function ManageJobs() {
 
     const navigate = useNavigate();
 
-    const [jobs, setJobs] = useState(false)
+    const [jobs, setJobs] = useState([])
 
     const {backendUrl, companyToken} = useContext(AppContext)
 
@@ -30,6 +30,20 @@ function ManageJobs() {
         toast.error(data.message)
       }
     } 
+
+    const changeJobVisiblity = async(id)=>{
+      try {
+        const {data} = await axios.post(backendUrl + '/api/company/change-visiblity', {id}, {headers: {token: companyToken}})
+        if(data.success){
+          toast.success(data.message)
+          fetchCompanyJobs()
+        }else{
+          toast.error(data.message)
+        }
+      } catch (error) {
+        toast.error(error.message)
+      }
+    }
 
     useEffect(()=>{
       if(companyToken){
@@ -53,7 +67,7 @@ function ManageJobs() {
           </tr>
         </thead>
         <tbody>
-          {manageJobsData.map((job, index) => (
+          {jobs.map((job, index) => (
             <tr
               key={index}
               className="border-t border-gray-200 hover:bg-gray-50 transition"
@@ -65,6 +79,7 @@ function ManageJobs() {
               <td className="p-3 text-blue-600 font-semibold">{job.applicants}</td>
               <td className="p-3 text-center">
                 <input
+                  onChange={()=>changeJobVisiblity(job._id)}
                   type="checkbox"
                   className="form-checkbox h-5 w-5 text-blue-500 focus:ring-blue-400"
                   defaultChecked

@@ -11,7 +11,7 @@ function JobCart({ job }) {
   
       <div className="flex items-center justify-center mb-4">
         <img
-          src={assets.company_icon}
+          src={job.companyId.image}
           alt="company logo"
           className="h-10 w-10 object-contain"
         />
@@ -37,6 +37,7 @@ function JobCart({ job }) {
 
     
       <div className="flex justify-between mt-4">
+        {console.log("Job ID passed to navigate:", job._id)}
         <button onClick = {()=> {navigate(`/apply-job/${job._id}`); scrollTo(0, 0)}} className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-700 transition">
           Apply
         </button>
