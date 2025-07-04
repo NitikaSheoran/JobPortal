@@ -39,7 +39,7 @@ function JobListing() {
 
     setFilteredJobs(newFilteredJobs);
     setCurrentPage(1);
-  }, [jobs, selectedCategories, selectedLocations])
+  }, [jobs, selectedCategories, selectedLocations, searchFilter])
 
   return (
     <div className="flex flex-col lg:flex-row gap-10 px-6 py-10">

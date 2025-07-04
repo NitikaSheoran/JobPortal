@@ -3,108 +3,84 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 function Hero() {
-
-  const {setSearchFilter, setIsSearched} = useContext(AppContext);
+  const { setSearchFilter, setIsSearched } = useContext(AppContext);
   const titleRef = useRef(null);
   const locationRef = useRef(null);
 
-  const onSearch =  ()=>{
+  const onSearch = () => {
     setSearchFilter({
-        title: titleRef.current.value,
-        location: locationRef.current.value
-    })
+      title: titleRef.current.value,
+      location: locationRef.current.value,
+    });
     setIsSearched(true);
-  }
-  
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center">
-     
-      <div className="w-full max-w-6xl py-16 px-6 sm:px-10 rounded-3xl mx-auto my-10 bg-gradient-to-r from-blue-100 to-blue-200 text-center shadow-md space-y-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
-          Over 10,000+ Jobs to Apply
-        </h2>
-        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-          Find daily-wage jobs near you in seconds.
-          <br className="sm:hidden" />
-          Trusted by thousands of workers and employers.
-        </p>
-
+    <section className="bg-blue-50 py-16 px-4 sm:px-8">
+      <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12">
         
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-          
-          <div className="flex items-center bg-white rounded-full px-4 py-2 w-full sm:w-1/3 shadow border border-gray-300">
-            <img
-              src={assets.search_icon}
-              alt="search"
-              className="w-5 h-5 mr-2"
-            />
-            <input
-              type="text"
-              ref={titleRef}
-              placeholder="Search for jobs"
-              className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-500"
-            />
+        {/* Left content */}
+        <div className="w-full lg:w-1/2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 leading-tight mb-4">
+            Find Jobs That Match Your Skills
+          </h1>
+          <p className="text-gray-600 text-lg mb-6">
+            Over <span className="text-blue-600 font-semibold">10,000+ opportunities</span> are waiting for you. Search, apply, and work with top companies.
+          </p>
+
+          {/* Search Card */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4 max-w-xl">
+            {/* Job Title Input */}
+            <div className="flex items-center border border-gray-300 rounded-lg px-4 py-2">
+              <img src={assets.search_icon} alt="search" className="w-5 h-5 mr-3" />
+              <input
+                type="text"
+                ref={titleRef}
+                placeholder="Job title or keyword"
+                className="w-full bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none text-sm"
+              />
+            </div>
+
+            {/* Location Input */}
+            <div className="flex items-center border border-gray-300 rounded-lg px-4 py-2">
+              <img src={assets.location_icon} alt="location" className="w-5 h-5 mr-3" />
+              <input
+                type="text"
+                ref={locationRef}
+                placeholder="Enter location"
+                className="w-full bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none text-sm"
+              />
+            </div>
+
+            {/* Search Button */}
+            <button
+              onClick={onSearch}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition"
+            >
+              🔍 Search Jobs
+            </button>
           </div>
+        </div>
 
-         
-          <div className="flex items-center bg-white rounded-full px-4 py-2 w-full sm:w-1/3 shadow border border-gray-300">
-            <img
-              src={assets.location_icon}
-              alt="location"
-              className="w-5 h-5 mr-2"
-            />
-            <input
-              type="text"
-              ref={locationRef}
-              placeholder="Location"
-              className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-500"
-            />
+        {/* Right illustration / trusted companies */}
+        <div className="w-full lg:w-1/2">
+          <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
+            <h3 className="text-gray-700 font-medium mb-4 text-center sm:text-left">
+              Trusted by top companies:
+            </h3>
+            <div className="flex flex-wrap justify-center sm:justify-start gap-6">
+              <img className="h-6 sm:h-8 object-contain" src={assets.microsoft_logo} alt="Microsoft" />
+              <img className="h-6 sm:h-8 object-contain" src={assets.accenture_logo} alt="Accenture" />
+              <img className="h-6 sm:h-8 object-contain" src={assets.walmart_logo} alt="Walmart" />
+              <img className="h-6 sm:h-8 object-contain" src={assets.samsung_logo} alt="Samsung" />
+              <img className="h-6 sm:h-8 object-contain" src={assets.amazon_logo} alt="Amazon" />
+              <img className="h-6 sm:h-8 object-contain" src={assets.adobe_logo} alt="Adobe" />
+            </div>
           </div>
-
-      
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-full shadow transition duration-200 w-full sm:w-auto" onClick={onSearch}>
-            Search
-          </button>
         </div>
-      </div>
 
-     
-      <div className="w-full max-w-5xl border border-gray-200 shadow-sm px-6 py-4 mb-10 bg-white rounded-2xl">
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          <p className="text-gray-500 text-sm font-medium">Trusted by</p>
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.microsoft_logo}
-            alt="Microsoft"
-          />
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.accenture_logo}
-            alt="Accenture"
-          />
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.walmart_logo}
-            alt="Walmart"
-          />
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.samsung_logo}
-            alt="Samsung"
-          />
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.amazon_logo}
-            alt="Amazon"
-          />
-          <img
-            className="h-6 sm:h-8 object-contain"
-            src={assets.adobe_logo}
-            alt="Adobe"
-          />
-        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
