@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const JobApplicationSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User'
     },
     companyId: {
@@ -15,7 +15,7 @@ const JobApplicationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: "pending"
+        default: "Pending"
     },
     date: {
         type: Number,

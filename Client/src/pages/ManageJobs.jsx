@@ -8,12 +8,13 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import Loading from "../components/Loading";
 
 function ManageJobs() {
 
     const navigate = useNavigate();
 
-    const [jobs, setJobs] = useState([])
+    const [jobs, setJobs] = useState(false)
 
     const {backendUrl, companyToken} = useContext(AppContext)
 
@@ -50,7 +51,9 @@ function ManageJobs() {
         fetchCompanyJobs();
       }
     }, [companyToken])
-  return (
+  return jobs ? jobs.length === 0
+  ? (<div className="flex items-center justify-center h-[70vh]"><p className="text-xl sm:text-2xl">No jobs Available</p></div>) 
+  : (
     <>
     <div className="p-6 mt-5 bg-white rounded-xl shadow-md overflow-x-auto">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">Manage Jobs</h2>
@@ -97,7 +100,7 @@ function ManageJobs() {
 
     </>
     
-  );
+  ): <Loading />
 }
 
 export default ManageJobs;

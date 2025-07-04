@@ -74,7 +74,7 @@ export const applyForJob = async(req, res) =>{
 export const getUserJobApplications = async(req, res) => {
     try{
         const userId = req.auth.userId;
-        const application = await JobApplication.find({userId}).populate('companyId', 'name email image').populate('jobId', 'title, description location category level salary').exec()
+        const application = await JobApplication.find({userId}).populate('companyId', 'name email image').populate('jobId', 'title description location category level salary').exec()
         if(!application){
             res.json({
                 success: false,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { assets, jobsApplied } from "../assets/assets";
 import moment from 'moment'
@@ -13,7 +13,7 @@ function Applications(){
 
     const [isEdit, setisEdit] = useState(false);
     const [resume, setResume] = useState(null);
-    const {backendUrl, userData, userApplications, fetchUserData} = useContext(AppContext)
+    const {backendUrl, userData, userApplications, fetchUserData, fetchUserApplications} = useContext(AppContext)
     const {user} = useUser();
     const {getToken} = useAuth();
 
@@ -36,7 +36,13 @@ function Applications(){
         setisEdit(false)
         setResume(null)
     }
-    
+
+    useEffect(()=>{
+        if(user){
+            fetchUserApplications()
+        }
+    }, [user])
+
     return(
         <>
         <Navbar />
@@ -54,7 +60,7 @@ function Applications(){
                     <button onClick={updateResume} className="bg-green-100 border border-green-400 rounded-lg px-4 py-2">Save</button>
                     </> : 
                     <div className="flex gap-2">
-                        <a className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg" href="" >Resume</a>
+                        <a className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg" href= {userData.resume} target="blank" >Resume</a>
                         <button onClick={()=>setisEdit(true)} className="text-gray-500 border border-gray-300 rounded-lg px-4 py-2">Edit</button>
                     </div>
                 }
@@ -72,16 +78,16 @@ function Applications(){
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {jobsApplied.map((job, index) =>
+                            {userApplications.map((job, index) =>
                             // job.jobId ? (
                             true ? (
                                 <tr key={index} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 flex items-center gap-3">
-                                    <img src={job.logo} alt="logo" className="h-6 w-6 object-contain" />
-                                    <span className="text-gray-800 font-medium">{job.company}</span>
+                                    <img src={job.companyId.image} alt="logo" className="h-6 w-6 object-contain" />
+                                    <span className="text-gray-800 font-medium">{job.companyId.name}</span>
                                 </td>
-                                <td className="px-6 py-4 text-gray-700">{job.title}</td>
-                                <td className="px-6 py-4 text-gray-600">{job.location}</td>
+                                <td className="px-6 py-4 text-gray-700">{job.jobId.title}</td>
+                                <td className="px-6 py-4 text-gray-600">{job.jobId.location}</td>
                                 <td className="px-6 py-4 text-gray-500">{moment(job.date).format("ll")}</td>
                                 <td className="px-6 py-4">
                                     <span className={`px-3 py-1 rounded-full text-xs font-medium 

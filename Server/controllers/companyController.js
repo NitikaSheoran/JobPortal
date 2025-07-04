@@ -4,6 +4,7 @@ import {v2 as cloudinary} from 'cloudinary'
 import generateToken from "../utils/generateTokens.js";
 import Job from "../models/Job.js";
 import JobApplication from "../models/jobApplication.js";
+import { messageInRaw } from "svix";
 
 // Register company
 export const registerCompany = async(req, res)=>{
@@ -143,8 +144,15 @@ export const postJob = async(req, res) =>{
 
 // company jon applicants
 export const getCompanyJobApplicants = async(req, res) =>{
-    const id = req.company._id;
-    // const jobApplicants = 
+    try {
+        const companyId = req.company._id;
+
+        const applicants = await JobApplication.find({companyId}).populate('userId', 'name image resume').populate('jobId', 'title location category level salary').exec()
+        return res.json({success: true, applicants})
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+    
 }
 
 // company jobs
@@ -171,7 +179,21 @@ export const getCompanyPostedJobs = async(req, res) => {
 
 // change job application status
 export const changeJobApplicationsStatus = async(req, res) =>{
-
+    try {
+        const {id, status} = req.body
+        await JobApplication.findOneAndUpdate({_id: id}, {
+            status: status
+        })
+        res.json({
+            success: true, 
+            message: "status"
+        })
+    } catch (error) {
+        res.json({
+            success:false, 
+            message: error.message
+        })
+    }
 }
 
 // change visibility
