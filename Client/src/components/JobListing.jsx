@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets, JobCategories, JobLocations,  } from "../assets/assets";
-import JobCart from "./jobCart";
+import JobCart from "./JobCart";
 
 function JobListing() {
 

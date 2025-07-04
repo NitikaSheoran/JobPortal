@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import { assets } from "../assets/assets";
 import kconvert from "k-converter";
 import moment from 'moment';
-import JobCart from "../components/jobCart";
+import JobCart from "../components/JobCart.jsx";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
