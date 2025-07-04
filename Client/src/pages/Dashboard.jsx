@@ -20,12 +20,11 @@ function Dashboard() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Top Navbar */}
       <div className="flex justify-between items-center px-6 py-4 bg-white shadow">
-        <img
-          onClick={() => navigate('/')}
-          src={assets.logo}
-          alt="Logo"
-          className="h-10 cursor-pointer"
-        />
+        <button 
+          onClick={() => navigate('/')} 
+          className="text-xl font-bold text-black hover:text-blue-800 transition-colors duration-300">
+           Rozgar<span className="text-blue-600">Setu</span>
+        </button>
         {companyData && (
         <div className="flex items-center gap-4">
           <p className="text-gray-600 text-sm">Welcome, {companyData.name}</p>

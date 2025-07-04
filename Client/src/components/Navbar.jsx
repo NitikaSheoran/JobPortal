@@ -17,8 +17,13 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
         
         <div className="flex items-center gap-3">
-          <img onClick = {()=>navigate('/')} src={assets.logo} alt="logo" className="h-10" />
+          <button onClick={()=>navigate('/')} className="text-xl font-bold text-black hover:text-black transition-colors duration-300"> Rozgar<span className="text-blue-800">Setu</span></button>
         </div>
+
+        <div className="flex items-center gap-6">
+          <Link to="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+            About
+          </Link>
 
         {/* Right side */}
         {user ? (
@@ -44,6 +49,7 @@ function Navbar() {
             </button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
