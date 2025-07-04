@@ -37,11 +37,12 @@ function Applications(){
         setResume(null)
     }
 
-    useEffect(()=>{
-        if(user){
-            fetchUserApplications()
-        }
-    }, [user])
+    useEffect(() => {
+    if (user && userData === null) {
+        fetchUserData();
+        fetchUserApplications();
+    }
+    }, [user, userData]);
 
     return(
         <>
@@ -49,8 +50,10 @@ function Applications(){
         <div className="container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10">
             <h2 className="text-xl font-semibold">Your Resume</h2>
             <div className="mb-6 mt-3">
-                {
-                    isEdit || userData && userData.resume==='' ? 
+                { userData === null ? (
+                    <p className="text-gray-500">Loading user data...</p>
+                    ) :
+                    isEdit || (userData && userData.resume==='') ? 
                     <>
                     <label className="flex items-center" htmlFor="resumeUpload">
                         <p className="bg-blue text-blue-600 px-4 py-2 rounded-lg mr-2">{resume? resume.name : "Select Resume"}</p>
@@ -78,9 +81,9 @@ function Applications(){
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {userApplications.map((job, index) =>
+                            {userApplications.filter(job => job.jobId && job.companyId).map((job, index) =>
                             // job.jobId ? (
-                            true ? (
+                             (
                                 <tr key={index} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 flex items-center gap-3">
                                     <img src={job.companyId.image} alt="logo" className="h-6 w-6 object-contain" />
@@ -98,7 +101,7 @@ function Applications(){
                                     </span>
                                 </td>
                                 </tr>
-                            ) : null
+                            ) 
                             )}
                         </tbody>
                         </table>
